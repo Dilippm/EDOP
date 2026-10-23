@@ -12,3 +12,68 @@
   font-size: 7px;
   letter-spacing: 0.1px;
 }
+
+.user-management-card {
+  position: relative;
+  width: 210px;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+
+.user-management-card:hover {
+  border-color: #cbd9ef;
+  box-shadow: 0 6px 18px #21345212;
+  transform: translateY(-1px);
+}
+
+.user-management-icon {
+  align-self: center;
+}
+
+.user-management-copy {
+  flex: 0;
+}
+
+.user-management-copy p {
+  line-height: 1.5;
+}
+
+.user-management-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+
+.user-management-overlay:focus-visible {
+  outline: 3px solid #4b8be7;
+  outline-offset: 3px;
+}
+
+.user-management-link {
+  margin-top: auto;
+  color: #276ed4;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-management-link span {
+  margin-left: 4px;
+  font-size: 15px;
+}
+
+@media (max-width: 560px) {
+  .user-management-card {
+    width: min(100%, 190px);
+    padding: 16px;
+  }
+}

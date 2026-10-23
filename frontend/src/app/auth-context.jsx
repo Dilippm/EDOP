@@ -25,6 +25,7 @@ function saveAuthState(user) {
     email: user?.email,
     username: user?.username ?? null,
     role: user?.role,
+    accessToken: user?.accessToken,
   };
   try {
     localStorage.setItem(AUTH_STATE_KEY, JSON.stringify({
@@ -54,7 +55,7 @@ export function AuthProvider({ children }) {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Unable to sign in. Please try again.');
-      const savedUser = saveAuthState(data.user);
+      const savedUser = saveAuthState({ ...data.user, accessToken: data.accessToken });
       setUser(savedUser);
       return savedUser;
     },

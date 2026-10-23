@@ -1,6 +1,6 @@
 # EDOP frontend memory
 
-This is a frontend-only handoff for future sessions. It summarizes the current implementation so a new session can make ordinary UI changes without rereading every source file. See [the project memory](../docs/PROJECT_MEMORY.md) for product scope and architecture constraints.
+This is a frontend-only handoff for future sessions. It summarizes the current implementation so a new session can make ordinary UI changes without rereading every source file. See [the backend memory](../backend/BACKEND_MEMORY.md) for API and database details, and [the project memory](../docs/PROJECT_MEMORY.md) for product scope and architecture constraints.
 
 ## Stack and run commands
 
