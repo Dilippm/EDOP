@@ -10,6 +10,11 @@ const adminUsername = process.env.ADMIN_USERNAME;
 const adminEmail = process.env.ADMIN_EMAIL;
 const adminPassword = process.env.ADMIN_PASSWORD;
 const jwtSecret = process.env.JWT_SECRET;
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const githubClientId = process.env.GITHUB_CLIENT_ID;
+const githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const githubCallbackUrl =process.env.GITHUB_CALLBACK_URL;
 
 if (!allowedNodeEnvironments.has(nodeEnv)) {
   throw new Error("NODE_ENV must be development, test, or production.");
@@ -51,4 +56,9 @@ export const env = Object.freeze({
   adminEmail,
   adminPassword,
   jwtSecret,
+  googleClientId,
+  githubClientId,
+  githubClientSecret,
+  googleClientSecret,
+  githubCallbackUrl
 });

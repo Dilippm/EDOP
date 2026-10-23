@@ -1,7 +1,9 @@
 
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
-import { login } from "../controllers/authController.js";
+import {  githubLoginStart,
+  githubLoginCallback,
+  githubLoginExchange, googleLogin, login } from "../controllers/authController.js";
 
 const router = Router();
 
@@ -16,5 +18,9 @@ const loginLimiter = rateLimit({
 });
 
 router.post("/login", loginLimiter, login);
+router.post("/google", loginLimiter, googleLogin);
+router.get("/github", githubLoginStart);
+router.get("/github/callback", githubLoginCallback);
+router.post("/github/exchange", loginLimiter, githubLoginExchange);
 
 export default router;

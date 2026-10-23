@@ -59,7 +59,7 @@ src/
 
 ## Current user experience
 
-- Initial route is a sign-in screen. Password login calls `POST /api/auth/login` with `{ email, password }` and stores the returned safe user profile in local storage for up to one day. The frontend currently discards the JWT returned by the backend, so the saved profile preserves the UI state only; it does not authenticate later API requests. GitHub remains a disabled placeholder.
+- Initial route is a sign-in screen. Password login calls `POST /api/auth/login`; Google sign-in posts a Google Identity Services ID token to `POST /api/auth/google`; GitHub sign-in starts at `POST /api/auth/github/start` and completes at `POST /api/auth/github`. All flows persist the returned safe profile and access token in local storage for up to one day. Configure the matching Google client IDs in frontend/backend env files. Configure the GitHub OAuth app callback URL as `${FRONTEND_URL}/login`, and set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in the backend. OAuth users must already be provisioned in EDOP.
 - React Router routes are centralized in `app/router.jsx`. `/` redirects to `/login` or `/dashboard` depending on the saved profile. Dashboard routes are nested under `ProtectedRoute` and `DashboardLayout`; `/login` is nested under `AuthLayout`.
 - Required routes: `/login`, `/dashboard`, `/repositories`, `/deployments`, `/infrastructure`, `/monitoring`, `/settings`. Additional routes preserve existing tabs: `/pipelines`, `/environments`, `/monitoring/:section`, and `/audit`.
 - Unknown paths render a not-found page. Direct dashboard navigation redirects to login and returns to the originally requested path after sign-in.

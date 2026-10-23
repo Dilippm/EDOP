@@ -3,7 +3,7 @@ import LoginPage from '../../features/auth/pages/LoginPage.jsx';
 import { useAuth } from '../../app/auth-context.jsx';
 
 export default function LoginRoute() {
-  const { isAuthenticated, isLoading, signIn } = useAuth();
+  const { isAuthenticated, isLoading, signIn, signInWithGoogle, beginGithubSignIn, signInWithGithub } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,5 +15,15 @@ export default function LoginRoute() {
     navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
   };
 
-  return <LoginPage onLogin={completeSignIn} />;
+  const completeGoogleSignIn = async (credential) => {
+    await signInWithGoogle(credential);
+    navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
+  };
+
+  const completeGithubSignIn = async (ticket) => {
+    await signInWithGithub(ticket);
+    navigate(location.state?.from?.pathname || '/dashboard', { replace: true });
+  };
+
+  return <LoginPage onLogin={completeSignIn} onGoogleLogin={completeGoogleSignIn} onGithubLogin={beginGithubSignIn} onGithubCallback={completeGithubSignIn} />;
 }

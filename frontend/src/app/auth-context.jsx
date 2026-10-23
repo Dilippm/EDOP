@@ -54,7 +54,44 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email:identifier, password }),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'Unable to sign in. Please try again.');
+      if (!response.ok) throw new Error(data.message || data.error || 'Unable to sign in. Please try again.');
+      const savedUser = saveAuthState({ ...data.user, accessToken: data.accessToken });
+      setUser(savedUser);
+      return savedUser;
+    },
+    async signInWithGoogle(credential) {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 15000);
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential }),
+          signal: controller.signal,
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.message || 'Unable to sign in with Google.');
+        const savedUser = saveAuthState({ ...data.user, accessToken: data.accessToken });
+        setUser(savedUser);
+        return savedUser;
+      } catch (error) {
+        if (error.name === 'AbortError') throw new Error('Google sign-in timed out. Check that the EDOP API is running and try again.');
+        throw error;
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    },
+    async beginGithubSignIn() {
+      window.location.assign(`${API_BASE_URL}/auth/github`);
+    },
+    async signInWithGithub(ticket) {
+      const response = await fetch(`${API_BASE_URL}/auth/github/exchange`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticket }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || 'Unable to sign in with GitHub.');
       const savedUser = saveAuthState({ ...data.user, accessToken: data.accessToken });
       setUser(savedUser);
       return savedUser;

@@ -32,16 +32,18 @@ scripts/migrate.js
 
 - `GET /api/health` is a process health check; `GET /api/health/db` checks PostgreSQL.
 - `POST /api/auth/login` accepts `{ "email": "...", "password": "..." }`. It is limited to 10 attempts per 15 minutes per client IP.
+- `POST /api/auth/google` accepts `{ "credential": "<Google ID token>" }`. It verifies the token audience with Google's Node auth library; set `GOOGLE_CLIENT_ID` in the backend and matching `VITE_GOOGLE_CLIENT_ID` in the frontend. New Google users are created with the developer role. If the verified email belongs to an unlinked account, sign-in is rejected so accounts are not silently linked.
+- `POST /api/auth/github/start` begins a GitHub OAuth code flow using a short-lived state cookie. GitHub redirects to `${FRONTEND_URL}/login`; the frontend then posts `code` and `state` to `POST /api/auth/github`. Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`; the GitHub OAuth app callback URL must match `${FRONTEND_URL}/login`.
 - Password verification uses bcrypt. The user query reads the database `password` column as `password_hash` for the controller.
 - Successful login returns a one-day JWT in the JSON response as `accessToken`, plus a safe user object. The backend currently does not set an auth cookie or provide a token verification middleware.
-- There is no registration, `/api/auth/me`, or `/api/auth/logout` endpoint in the current route tree. Consequently, frontend local profile persistence is not proof of backend authentication, and logout does not revoke a token.
+- There is no password registration, `/api/auth/me`, or `/api/auth/logout` endpoint in the current route tree. OAuth identities link to already-provisioned EDOP users by verified email on first sign-in; frontend local profile persistence is not proof of backend authentication, and logout does not revoke a token.
 - Login accepts email only, although the frontend login label says “Email or username.”
 - The JWT uses issuer `edop-api`, audience `edop`, subject = user ID, and includes the role claim. Keep authorization decisions server-side; do not trust a client-saved profile.
 
 ## Database and migrations
 
 - Migration `001_create_auth_schema.sql` creates `auth.users` and `auth.auth_identities`. Users have name, email, password, avatar URL, role, and timestamps. Email uniqueness is case-insensitive through a partial expression index.
-- `auth.auth_identities` reserves provider identity records for Google and GitHub; no OAuth routes are implemented.
+- `auth.auth_identities` stores linked Google and GitHub provider identities.
 - `npm run migrate` currently runs only `001_create_auth_schema.sql` directly and does not track applied migrations. The SQL is not idempotent; do not rerun it against a database where it has already been applied.
 - The bootstrap admin requires `ADMIN_EMAIL` and `ADMIN_PASSWORD`; `ADMIN_NAME` is optional. Those bootstrap variables are not listed in the current `.env.example`.
 
