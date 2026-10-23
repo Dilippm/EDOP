@@ -1,8 +1,21 @@
 import { NavLink } from 'react-router-dom';
 import { ChevronDown, Hexagon, X } from 'lucide-react';
 import { navigationItems } from '../../data/navigation.js';
+import { useAuth } from '../../app/auth-context.jsx';
 
 export default function Sidebar({ open, onClose, onSignOut }) {
+  const { user } = useAuth();
+  const displayName = user?.name?.trim() || user?.username || user?.email || 'User';
+  const displayRole = user?.role
+    ? user.role.toLowerCase().replace(/[_-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
+    : 'User';
+  const avatarInitials = displayName
+    .split(/[\s@._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join('') || 'U';
+
   return (
     <>
       <aside className={`sidebar ${open ? 'sidebar-open' : ''}`}>
@@ -22,8 +35,8 @@ export default function Sidebar({ open, onClose, onSignOut }) {
         </nav>
         <div className="sidebar-bottom">
           <button className="profile" onClick={onSignOut}>
-            <span className="profile-avatar">A</span>
-            <span><strong>Admin User</strong><small>Platform Engineer</small></span>
+            <span className="profile-avatar">{avatarInitials}</span>
+            <span><strong>{displayName}</strong><small>{displayRole}</small></span>
             <ChevronDown size={15} />
           </button>
         </div>
