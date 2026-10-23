@@ -1,1 +1,10 @@
-node_modules/
+# Vite build output and cache
+dist/
+.vite/
+
+# Test and coverage output
+coverage/
+
+# TypeScript build cache
+*.tsbuildinfo
+
