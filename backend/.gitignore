@@ -1,13 +1,18 @@
-# Compiled output
-dist/
-build/
+node_modules/
 coverage/
+dist/
 
-# Prisma generated client (generated from schema)
-src/generated/prisma/
+.env
+.env.*
+!.env.example
 
-# Runtime and debug output
-*.tsbuildinfo
-*.pid
-*.seed
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
