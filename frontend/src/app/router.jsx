@@ -15,7 +15,8 @@ import ProtectedRoute from './ProtectedRoute.jsx';
 import { useAuth } from './auth-context.jsx';
 
 function RootRedirect() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) return null;
   return <Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />;
 }
 

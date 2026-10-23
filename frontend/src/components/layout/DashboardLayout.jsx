@@ -5,11 +5,11 @@ import AppShell from './AppShell.jsx';
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { signOutPreview } = useAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
 
-  const signOut = () => {
-    signOutPreview();
+  const handleSignOut = async () => {
+    await signOut();
     navigate('/login', { replace: true });
   };
 
@@ -18,7 +18,7 @@ export default function DashboardLayout() {
       open={sidebarOpen}
       onCloseNavigation={() => setSidebarOpen(false)}
       onOpenNavigation={() => setSidebarOpen(true)}
-      onSignOut={signOut}
+      onSignOut={handleSignOut}
     >
       <Outlet />
     </AppShell>
