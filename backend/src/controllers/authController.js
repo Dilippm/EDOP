@@ -184,33 +184,40 @@ async function readGithubJson(response, step) {
 }
 
 // GET /api/auth/github
+/**
+ * Initiates the GitHub login process.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export async function githubLoginStart(req, res) {
+  // Check if GitHub OAuth is configured
   if (!env.githubClientId || !env.githubClientSecret || !env.githubCallbackUrl) {
     return res.status(503).json({
       message: "GitHub sign-in is not configured.",
     });
   }
-
+// Generate a random state parameter for CSRF protection
   const state = randomBytes(32).toString("hex");
 
   // Prune expired states and one-time tickets.
   const now = Date.now();
-
+// Remove expired states
   for (const [key, value] of githubStates) {
     if (value.expiresAt < now) githubStates.delete(key);
   }
-
+// Remove expired login tickets
   for (const [key, value] of githubLoginTickets) {
     if (value.expiresAt < now) githubLoginTickets.delete(key);
   }
-
-  githubStates.set(state, { expiresAt: now + 10 * 60 * 1000 });
-
+// Store the state with an expiration time of 10 minutes
+  githubStates.set(state, { expiresAt: now + 10 * 60 * 1000 }); // 10 minutes
+// Set the state in a secure, HttpOnly cookie for later verification
   res.setHeader(
     "Set-Cookie",
     `edop_github_state=${encodeURIComponent(state)}; ${githubCookieOptions()}`
   );
-
+// Construct the GitHub authorization URL with required parameters
   const authorizationUrl = new URL("https://github.com/login/oauth/authorize");
   authorizationUrl.searchParams.set("client_id", env.githubClientId);
   authorizationUrl.searchParams.set("redirect_uri", env.githubCallbackUrl);
@@ -221,14 +228,20 @@ export async function githubLoginStart(req, res) {
 }
 
 // GET /api/auth/github/callback
+/**
+ * Handles the GitHub login callback.
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 export async function githubLoginCallback(req, res) {
   const { code, state, error } = req.query;
-
+// Clear the state cookie to prevent reuse
   res.setHeader(
     "Set-Cookie",
     `edop_github_state=; ${githubCookieOptions()}; Max-Age=0`
   );
-
+// Handle error scenarios from GitHub authorization
   if (error) {
     return redirectToLogin(res, "GitHub authorization was cancelled.");
   }
@@ -240,12 +253,12 @@ export async function githubLoginCallback(req, res) {
   if (typeof code !== "string" || typeof state !== "string") {
     return redirectToLogin(res, "Invalid GitHub authorization response.");
   }
-
+// Retrieve the state from the cookie and the stored state for verification
   const cookieState = getCookie(req, "edop_github_state");
   const storedState = githubStates.get(state);
 
   githubStates.delete(state);
-
+// Verify the state parameter to prevent CSRF attacks and check for expiration
   if (
     !cookieState ||
     !safeEqual(cookieState, state) ||
@@ -259,6 +272,7 @@ export async function githubLoginCallback(req, res) {
   }
 
   try {
+    // Exchange the authorization code for an access token from GitHub
     const tokenResponse = await fetch(
       "https://github.com/login/oauth/access_token",
       {
@@ -276,21 +290,21 @@ export async function githubLoginCallback(req, res) {
         signal: AbortSignal.timeout(10000),
       }
     );
-
+// Read and parse the JSON response from GitHub for the access token
     const tokenData = await readGithubJson(tokenResponse, "GitHub token exchange");
 
     if (!tokenResponse.ok || !tokenData.access_token) {
       console.error("GitHub token exchange failed:", tokenData.error);
       return redirectToLogin(res, "Unable to authenticate with GitHub.");
     }
-
+// Set up headers for subsequent GitHub API requests using the obtained access token
     const githubHeaders = {
       Authorization: `Bearer ${tokenData.access_token}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
       "User-Agent": "EDOP",
     };
-
+// Fetch the user's GitHub profile information using the access token
     const profileResponse = await fetch("https://api.github.com/user", {
       headers: githubHeaders,
       signal: AbortSignal.timeout(10000),
