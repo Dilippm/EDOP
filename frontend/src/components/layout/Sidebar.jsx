@@ -21,7 +21,7 @@ export default function Sidebar({ open, onClose, onSignOut }) {
       <aside className={`sidebar ${open ? 'sidebar-open' : ''}`}>
         <div className="brand">
           <span className="brand-mark"><Hexagon size={26} /><b>◆</b></span>
-          <span className="brand-copy"><strong>EDOP</strong><small>ENTERPRISE DEPLOYMENT PLATFORM</small></span>
+          <span className="brand-copy"><strong>EDOP</strong><small>DEPLOYMENT PLATFORM</small></span>
           <button className="close-nav" onClick={onClose} aria-label="Close navigation"><X size={18} /></button>
         </div>
         <nav className="main-nav">

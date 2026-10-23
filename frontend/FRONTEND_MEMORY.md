@@ -53,6 +53,7 @@ src/
 - Put dashboard-only cards/panel parts in `components/dashboard/`.
 - Keep layout/navigation shell pieces in `components/layout/`.
 - Each feature page belongs in `features/<feature>/pages/`; `routes/<feature>/` should contain thin route adapters. `App.jsx` should remain the small router/provider composition.
+- `features/repositories/pages/RepositoriesPage.jsx` owns the live project, repository-link, and project-member workflow; it is named for the legacy `/repositories` route but its page title is Projects.
 - Keep sample fixtures in `data/sampleData.js`; do not duplicate those records inline when a page can consume the fixture.
 - Keep navigation metadata in `data/navigation.js`, which is shared by the sidebar.
 - CSS currently uses global class names rather than CSS modules. `styles.css` is legacy/base styling; `dashboard.css` overrides and adds the screenshot-inspired design; `brand.css` is a small targeted override. When changing visual behavior, check selector order because `brand.css` is imported last.
@@ -65,19 +66,23 @@ src/
 - Unknown paths render a not-found page. Direct dashboard navigation redirects to login and returns to the originally requested path after sign-in.
 - The frontend restores its display profile from `edop_auth_state` in local storage for up to one day. It does not call `/api/auth/me`. Treat this profile and the route guard as UI state only; local storage can be edited by the user.
 - Sign-out is exposed by clicking the profile area at the bottom of the sidebar. It tries `POST /api/auth/logout` and always removes the saved profile. The current backend does not register that logout route, so server-side token invalidation is not implemented.
-- `VITE_API_BASE_URL` can override the API base URL; the fallback is `http://localhost:5000/api`. Use `frontend/.env.local` for local overrides and restart Vite after changing it.
+- `VITE_API_BASE_URL` can override the API base URL; the fallback is `http://localhost:5000/api`. Use `frontend/.env.local` for local overrides and restart Vite after changing it. Authenticated API calls send the saved Bearer access token.
 - The login form accepts an email or username in its label, but the current backend login handler searches by email only.
 - Main dashboard is `OverviewPage.jsx`: screenshot-inspired dark sidebar and light canvas, summary cards, recent pipeline/deployment tables, system-health rings and illustrative chart, infrastructure table, alerts and activity feed.
+- `RepositoriesPage.jsx` is the Projects workspace at `/repositories`. It loads the signed-in user's projects with `GET /api/projects`; projects therefore persist across refreshes.
+- Only platform administrators see the New project action. Creating a project makes the creator its project owner.
+- Selecting a project loads its linked repositories and member roster. Any project member can view these. Only a project owner sees controls to link or unlink repositories, add members, or delete that project.
+- Repository links use GitHub URLs and display their backend `verification_status`; current links are `unverified` until a GitHub repository integration is available.
 - Repositories, Pipelines (including selectable row detail), Deployments, Infrastructure and Observability each have page modules.
 - Environments currently reuses the Infrastructure page. Metrics, Logs, Traces, Alerts, Audit and Settings currently use `PlaceholderPage`; they are navigation placeholders, not implemented functionality.
-- Dashboard and feature-page data remain sample fixtures. The login form is the only current backend call; buttons/filters that are not explicitly wired remain decorative or disabled.
+- Dashboard, deployment, infrastructure, monitoring, audit, and most feature-page data remain sample fixtures. Authentication and the Projects workspace make live backend calls.
 - All values are sample data. The green “Live” label/chart are illustrative and should not be presented as live telemetry.
-- Sidebar brand currently displays `EDOP` on its own line with `ENTERPRISE DEPLOYMENT PLATFORM` on one line beneath it. Keep the descriptor inside the fixed sidebar width.
+- Sidebar brand displays `EDOP` with the one-line `ENTERPRISE DEPLOYMENT PLATFORM` descriptor. `brand.css` keeps `.brand-copy` flexible within the fixed sidebar width and sizes the descriptor independently; preserve these constraints when changing the wordmark.
 
 ## Notes for the next frontend change
 
 1. Preserve the reusable component boundaries and existing screenshot design unless the user requests a visual change.
-2. The login form calls the current backend, but the frontend does not retain or send its JWT. Treat the persisted profile as UI state only until token/session handling and protected backend routes are implemented.
+2. The frontend stores the login token in `edop_auth_state` and sends it as a Bearer token for protected project APIs. The server remains responsible for every authorization decision.
 3. For a new screen, add a page component, route it in `app/router.jsx`, and update `data/navigation.js`; reuse UI components and fixtures where applicable.
 4. For a new reusable visual element, add it under the matching `components/ui/`, `components/dashboard/`, or `components/layout/` folder rather than expanding `App.jsx`.
 5. Route definitions are in `app/router.jsx`; update `data/navigation.js` when adding or changing sidebar destinations. Keep route wrappers thin and point them at existing feature page components.

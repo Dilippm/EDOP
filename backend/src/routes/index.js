@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { checkDatabaseConnection } from "../config/database.js";
 import authRoutes from "./authRoutes.js";
+import projectRoutes from "./projectRoutes.js";
 import userRoutes from "./userRoutes.js";
 
 const router = Router();
 
 
 router.use("/auth", authRoutes);
+router.use("/projects", projectRoutes);
 router.use("/users", userRoutes);
 
 router.get("/health", (req, res) => {

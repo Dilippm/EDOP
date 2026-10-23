@@ -454,6 +454,29 @@ button {
   color: #929cab;
   margin: 4px 0 0;
 }
+.project-create-panel { max-width: 680px; }
+.project-form { display: grid; gap: 12px; }
+.project-form label { display: grid; gap: 6px; color: #57657a; font-size: 10px; font-weight: 600; }
+.project-form input, .project-form textarea { width: 100%; border: 1px solid #dfe5ed; border-radius: 6px; padding: 9px; background: #fff; color: #34435d; font: 11px "DM Sans", sans-serif; outline: none; resize: vertical; }
+.project-form input { height: 34px; }
+.project-form input:focus, .project-form textarea:focus { border-color: #4b8be7; box-shadow: 0 0 0 3px #4786e51a; }
+.project-form-actions { display: flex; justify-content: flex-end; gap: 7px; }
+.project-error { border: 1px solid #f2d5d3; border-radius: 6px; background: #fff5f4; color: #a94843; padding: 9px 11px; font-size: 10px; }
+.project-empty { padding: 24px 9px; text-align: center; color: #8c97a7; }
+.repository-panel { max-width: 940px; }
+.repository-form { display: flex; align-items: end; gap: 9px; margin-bottom: 13px; }
+.repository-form label { display: grid; flex: 1; gap: 6px; color: #57657a; font-size: 10px; font-weight: 600; }
+.repository-form input { height: 34px; width: 100%; border: 1px solid #dfe5ed; border-radius: 6px; padding: 0 9px; background: #fff; color: #34435d; font: 11px "DM Sans", sans-serif; outline: none; }
+.repository-form input:focus { border-color: #4b8be7; box-shadow: 0 0 0 3px #4786e51a; }
+.repository-unlink { color: #a94843; display: inline-flex; align-items: center; gap: 4px; }
+.project-actions { display: flex; align-items: center; gap: 10px; }
+.text-button.project-delete { color: #a94843; display: inline-flex; align-items: center; gap: 4px; }
+.project-members { border-top: 1px solid #edf0f4; margin-top: 20px; padding-top: 18px; }
+.member-form { display: grid; grid-template-columns: minmax(180px, 1fr) 150px auto; align-items: end; gap: 9px; margin-bottom: 13px; }
+.member-form label { display: grid; gap: 6px; color: #57657a; font-size: 10px; font-weight: 600; }
+.member-form input, .member-form select { height: 34px; width: 100%; border: 1px solid #dfe5ed; border-radius: 6px; padding: 0 9px; background: #fff; color: #34435d; font: 11px "DM Sans", sans-serif; outline: none; }
+.member-form input:focus, .member-form select:focus { border-color: #4b8be7; box-shadow: 0 0 0 3px #4786e51a; }
+.project-permission { color: #7b8799; font-size: 10px; margin: 0 0 13px; }
 .text-button {
   border: 0;
   background: none;

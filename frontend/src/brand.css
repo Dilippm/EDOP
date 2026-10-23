@@ -1,5 +1,7 @@
 .brand-copy {
   display: block;
+  min-width: 0;
+  flex: 1;
 }
 
 .brand-copy strong {
