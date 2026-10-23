@@ -9,18 +9,13 @@ const adminName = process.env.ADMIN_NAME;
 const adminUsername = process.env.ADMIN_USERNAME;
 const adminEmail = process.env.ADMIN_EMAIL;
 const adminPassword = process.env.ADMIN_PASSWORD;
-const sessionCookieName = process.env.SESSION_COOKIE_NAME ?? "edop_session";
-const sessionTtlHours = Number(process.env.SESSION_TTL_HOURS ?? "168");
+const jwtSecret = process.env.JWT_SECRET;
 
 if (!allowedNodeEnvironments.has(nodeEnv)) {
   throw new Error("NODE_ENV must be development, test, or production.");
 }
-if (!Number.isInteger(sessionTtlHours) || sessionTtlHours < 1 || sessionTtlHours > 720) {
-  throw new Error("SESSION_TTL_HOURS must be an integer between 1 and 720.");
-}
-if (!/^[A-Za-z0-9_-]{1,64}$/.test(sessionCookieName)) {
-  throw new Error("SESSION_COOKIE_NAME contains unsupported characters.");
-}
+
+
 
 const port = Number(portValue);
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -55,6 +50,5 @@ export const env = Object.freeze({
   adminUsername,
   adminEmail,
   adminPassword,
-  sessionCookieName,
-  sessionTtlHours,
+  jwtSecret,
 });
