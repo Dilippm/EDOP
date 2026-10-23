@@ -1,0 +1,31 @@
+import {
+  Activity,
+  Bell,
+  Boxes,
+  Cloud,
+  Eye,
+  GitBranch,
+  LayoutDashboard,
+  Package,
+  ScrollText,
+  Settings2,
+  ShieldCheck,
+  Workflow,
+  Zap,
+} from 'lucide-react';
+
+export const navigationItems = [
+  { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Repositories', path: '/repositories', icon: GitBranch },
+  { label: 'Pipelines', path: '/pipelines', icon: Workflow, count: 4 },
+  { label: 'Deployments', path: '/deployments', icon: Package },
+  { label: 'Infrastructure', path: '/infrastructure', icon: Cloud },
+  { label: 'Environments', path: '/environments', icon: Boxes },
+  { label: 'Observability', path: '/monitoring', icon: Eye },
+  { label: 'Metrics', path: '/monitoring/metrics', icon: Activity },
+  { label: 'Logs', path: '/monitoring/logs', icon: ScrollText },
+  { label: 'Traces', path: '/monitoring/traces', icon: Zap },
+  { label: 'Alerts', path: '/monitoring/alerts', icon: Bell },
+  { label: 'Audit', path: '/audit', icon: ShieldCheck },
+  { label: 'Settings', path: '/settings', icon: Settings2 },
+];

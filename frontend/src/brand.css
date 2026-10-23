@@ -1,0 +1,14 @@
+.brand-copy {
+  display: block;
+}
+
+.brand-copy strong {
+  display: block;
+  line-height: 1.15;
+}
+
+.brand-copy small {
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: 0.1px;
+}

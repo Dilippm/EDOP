@@ -1,0 +1,18 @@
+.nav-item {
+  text-decoration: none;
+}
+
+.nav-item:focus-visible,
+.click-row:focus-visible {
+  outline: 2px solid #59a7ff;
+  outline-offset: 2px;
+}
+
+.mobile-backdrop {
+  border: 0;
+  padding: 0;
+}
+
+.not-found-link {
+  text-decoration: none;
+}
